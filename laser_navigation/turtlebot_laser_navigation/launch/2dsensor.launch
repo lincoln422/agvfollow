@@ -1,0 +1,15 @@
+<launch>
+  <arg name="2d_sensor"  default="$(optenv TURTLEBOT_2D_SENSOR hokuyo)"/>
+  <!-- rplidar, hokuyo -->
+ 
+ 
+  <include file="$(find turtlebot_laser_navigation)/launch/rplidar_laser.launch">
+  
+    <!-- if need change port -->
+    <!--arg name="laser_port" value="/dev/ttyUSB1" /-->
+  </include>
+ 
+  <!-- Run self-filter -->
+  <node name="laser_filter" pkg="turtlebot_laser_navigation" type="laser_footprint_filter" />
+ 
+</launch>

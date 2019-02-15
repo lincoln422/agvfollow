@@ -1,0 +1,30 @@
+启动部分：
+
+①urdf: roslaunch mecanum_hand mecanum.launch
+
+②连接arduino: rosrun rosserial_python serial_node.py /dev/ttyUSB1
+
+③导航模块：roslaunch turtlebot_laser_navigation amcl_demo.launch map_file:=/home/quan/map/flashlidar_hector_mapping.yaml
+
+④rviz: roslaunch turtlebot_rviz_launchers view_navigation.launch
+
+
+注：
+amcl_demo.launch中的里程计 odom converter 可以去掉
+
+move_base.launch.xml中只需添加base_local_planner_params.yaml,costmap_common_params.yaml,
+global_costmap_params.yaml,local_costmap_params.yaml,其他的也可以添加，配置参数配置这四个文件就行
+
+
+搭建步骤：
+①建立urdf：不需要很精确，因为costmap_common_params.yaml可以配置机器人的占地面积。只需要确定好参考系之间的关系，确定一个总的父参考系。
+②编写arduino底层控制程序，可以订阅给定的速度信息。http://www.ncnynl.com/category/ros-arduino/
+（rviz实现同步，需要添加odom发布文件才可以让它在rviz中跑起来，也可以下载一个arbotix包。这一步也可以省去，只要确定你的机器人可以正确订阅速度信息就行了）
+③激光驱动 http://www.ncnynl.com/archives/201611/1095.html
+④参照amcl_demo.launch
+
+注意：
+①各参考系的关系一定要配置好，即父参考系和子参考系（urdf,激光驱动文件，scan_tools,global_costmap_params.yaml,local_costmap_params.yaml）
+②move_base.launch.xml中34行将“vel”修改为机器人订阅的话题名
+③导航避障主要配置base_local_planner_params.yaml,costmap_common_params.yaml中的参数，参考ros官网
+
